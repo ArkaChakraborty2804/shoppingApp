@@ -10,13 +10,28 @@ services:
       - ./gateway/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - auth-service
+      - products-service
     restart: unless-stopped
 
-  # The Go Authentication Service (no longer needs public ports)
+  # The Go Authentication Service
   auth-service:
-    build: .
+    build:
+      context: .
+      dockerfile: auth.Dockerfile # <-- Use the auth.Dockerfile
     environment:
-      # Use variables from the .env file to construct the DATABASE_URL
+      # Use variables from the .env file
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # The Go Products Service
+  products-service:
+    build:
+      context: .
+      dockerfile: products.Dockerfile # <-- Use the products.Dockerfile
+    environment:
+      # Use variables from the .env file
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
     depends_on:
       - db

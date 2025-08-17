@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS products (
     category VARCHAR(100),
     stock_quantity INT NOT NULL DEFAULT 0,
     photo_url VARCHAR(2048),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- Reviews and ratings are combined into a single table
